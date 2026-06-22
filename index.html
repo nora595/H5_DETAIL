@@ -87,22 +87,28 @@
     /* Gallery */
     .gallery-wrap { background: #fff; }
     .gallery-main {
+      position: relative;
       width: 100%; aspect-ratio: 1 / 0.82;
       background: #eef1f3; overflow: hidden;
     }
-    .gallery-main img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .gallery-main > img { width: 100%; height: 100%; object-fit: cover; display: block; }
     .thumb-strip {
-      display: flex; gap: 8px; padding: 10px 14px 14px;
+      position: absolute; left: 0; right: 0; bottom: 0;
+      display: flex; gap: 8px; padding: 12px 14px;
       overflow-x: auto; scrollbar-width: none;
+      background: linear-gradient(to top, rgba(0, 0, 0, 0.32) 0%, rgba(0, 0, 0, 0.08) 55%, transparent 100%);
     }
     .thumb-strip::-webkit-scrollbar { display: none; }
     .thumb {
-      flex: 0 0 auto; width: 56px; height: 56px;
+      flex: 0 0 auto; width: 52px; height: 52px;
       border-radius: 8px; overflow: hidden;
-      border: 2px solid transparent; padding: 0;
+      border: 2px solid rgba(255, 255, 255, 0.75); padding: 0;
       background: #eef1f3; cursor: pointer;
     }
-    .thumb.active { border-color: var(--primary); }
+    .thumb.active {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 1px var(--primary);
+    }
     .thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
     /* Product info */
@@ -125,8 +131,12 @@
       display: flex; align-items: center; justify-content: space-between;
       gap: 12px; margin-bottom: 14px;
     }
-    .price-main { font-size: 28px; font-weight: 700; flex-shrink: 0; }
-    .price-main .dec { font-size: 16px; }
+    .price-main { font-size: 28px; font-weight: 700; flex-shrink: 0; color: var(--text); }
+    .price-main .currency,
+    .price-main .unit { color: #b8c0c5; font-weight: 400; }
+    .price-main .currency { font-size: 16px; }
+    .price-main .unit { font-size: 14px; }
+    .price-main .amount { font-weight: 700; color: var(--text); }
     .price-meta {
       font-size: 12px; color: var(--muted);
       text-align: right; flex: 1; line-height: 1.4;
@@ -270,8 +280,12 @@
       cursor: pointer; flex-shrink: 0;
     }
     .rec-fav.on { color: var(--danger); }
-    .rec-price { font-size: 16px; font-weight: 700; line-height: 1.2; margin-bottom: 2px; }
-    .rec-price .dec { font-size: 12px; font-weight: 700; }
+    .rec-price { font-size: 16px; font-weight: 700; line-height: 1.2; margin-bottom: 2px; color: var(--text); }
+    .rec-price .currency,
+    .rec-price .unit { color: #b8c0c5; font-weight: 400; }
+    .rec-price .currency { font-size: 12px; }
+    .rec-price .unit { font-size: 11px; }
+    .rec-price .amount { font-weight: 700; color: var(--text); }
     .rec-item {
       font-size: 11px; color: var(--muted); margin-bottom: 4px;
     }
@@ -308,7 +322,8 @@
     .sheet {
       width: 100%; max-width: 430px;
       background: #fff; border-radius: 16px 16px 0 0;
-      max-height: 88vh; display: flex; flex-direction: column;
+      max-height: 75vh; height: 75vh;
+      display: flex; flex-direction: column;
       animation: slideUp 0.28s ease;
     }
     @keyframes slideUp {
@@ -439,12 +454,12 @@
 
     function fmtPrice(v) {
       const [int, dec] = v.toFixed(2).split('.');
-      return `<span class="dec">$ </span>${int}<span class="dec">.${dec} USD</span>`;
+      return `<span class="currency">$ </span><span class="amount">${int}.${dec}</span><span class="unit"> USD</span>`;
     }
 
     function fmtRecPrice(v) {
       const [int, dec] = v.toFixed(2).split('.');
-      return `<span class="dec">$ </span>${int}<span class="dec">.${dec} USD</span>`;
+      return `<span class="currency">$ </span><span class="amount">${int}.${dec}</span><span class="unit"> USD</span>`;
     }
 
     function openOverlay(name) {
@@ -475,13 +490,13 @@
         <div class="gallery-wrap">
           <div class="gallery-main">
             <img src="${PRODUCT.gallery[state.imageIndex]}" alt="${PRODUCT.title}" />
-          </div>
-          <div class="thumb-strip">
-            ${PRODUCT.gallery.map((src, i) => `
-              <button class="thumb ${state.imageIndex === i ? 'active' : ''}" data-thumb="${i}">
-                <img src="${src}" alt="" />
-              </button>
-            `).join('')}
+            <div class="thumb-strip">
+              ${PRODUCT.gallery.map((src, i) => `
+                <button class="thumb ${state.imageIndex === i ? 'active' : ''}" data-thumb="${i}">
+                  <img src="${src}" alt="" />
+                </button>
+              `).join('')}
+            </div>
           </div>
         </div>
 
