@@ -301,7 +301,8 @@
       background: #fff;
       border-top: 1px solid var(--line);
       padding: 10px 14px calc(10px + env(safe-area-inset-bottom));
-      display: flex; align-items: center; z-index: 30;
+      display: grid; grid-template-columns: 48px 1fr; gap: 12px;
+      align-items: center; z-index: 30;
     }
     .bar-icon {
       display: flex; flex-direction: column; align-items: center; gap: 2px;
@@ -310,6 +311,12 @@
     }
     .bar-icon .ico { font-size: 22px; color: #56646d; font-weight: 400; }
     .bar-icon.active .ico { color: var(--danger); font-weight: 700; }
+    .btn-wishlist {
+      height: 44px; border: none; border-radius: 8px;
+      background: var(--primary); color: #fff;
+      font-size: 15px; font-weight: 600; cursor: pointer; width: 100%;
+    }
+    .btn-wishlist:active { background: var(--primary-dark); }
 
     /* Overlay & Sheet */
     .overlay {
@@ -322,10 +329,11 @@
     .sheet {
       width: 100%; max-width: 430px;
       background: #fff; border-radius: 16px 16px 0 0;
-      max-height: 75vh; height: 75vh;
       display: flex; flex-direction: column;
       animation: slideUp 0.28s ease;
     }
+    .sheet-param { max-height: 75vh; height: 75vh; }
+    .sheet-picker { max-height: 88vh; height: 88vh; }
     @keyframes slideUp {
       from { transform: translateY(100%); }
       to { transform: translateY(0); }
@@ -353,6 +361,192 @@
     }
     .param-row .label { color: var(--muted); }
     .param-row .value { color: var(--text); text-align: right; max-width: 60%; }
+
+    .sheet-footer {
+      flex-shrink: 0; border-top: 1px solid var(--line);
+      padding: 10px 12px calc(10px + env(safe-area-inset-bottom));
+      background: #fff;
+    }
+    .footer-summary {
+      display: flex; align-items: center; flex-wrap: wrap;
+      gap: 8px 10px; margin-bottom: 10px;
+    }
+    .footer-check {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 13px; cursor: pointer; flex-shrink: 0;
+    }
+    .footer-check input { width: 16px; height: 16px; accent-color: var(--primary); }
+    .footer-total { font-size: 13px; white-space: nowrap; }
+    .footer-total strong { color: var(--total-red); font-size: 16px; font-weight: 700; }
+    .footer-selected {
+      font-size: 12px; color: var(--muted); cursor: pointer;
+      display: flex; align-items: center; gap: 4px;
+    }
+    .footer-selected strong { color: var(--text); }
+    .footer-actions { display: flex; gap: 10px; width: 100%; }
+    .footer-actions .btn-wishlist { flex: 1; }
+
+    .picker-preview {
+      display: flex; gap: 12px; padding: 14px 16px;
+      border-bottom: 1px solid var(--line); flex-shrink: 0;
+    }
+    .picker-preview img {
+      width: 72px; height: 72px; border-radius: 8px;
+      object-fit: cover; background: #eef1f3; flex-shrink: 0;
+    }
+    .picker-preview-info { flex: 1; min-width: 0; }
+    .picker-preview-info h4 {
+      font-size: 13px; line-height: 1.35; margin-bottom: 6px;
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    .picker-price { font-size: 22px; font-weight: 700; }
+    .picker-price .currency, .picker-price .unit { color: #b8c0c5; font-weight: 400; font-size: 14px; }
+    .picker-price .amount { font-weight: 700; color: var(--text); }
+    .picker-moq { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+    .sale-tabs {
+      display: flex; margin: 0 16px 14px; position: relative;
+      height: 40px; border-radius: 8px; overflow: hidden;
+      background: #f0f2f4; flex-shrink: 0;
+    }
+    .sale-tab {
+      flex: 1; border: none; background: transparent;
+      font-size: 14px; color: #56646d; cursor: pointer;
+      position: relative; z-index: 1; height: 100%;
+    }
+    .sale-tab.active {
+      background: rgba(44, 217, 198, 0.18); color: #149c88;
+      font-weight: 600; z-index: 2;
+    }
+    .sale-tab.active:first-child::after {
+      content: ''; position: absolute; right: -10px; top: 0;
+      width: 20px; height: 100%;
+      background: rgba(44, 217, 198, 0.18);
+      clip-path: polygon(0 0, 100% 50%, 0 100%);
+      z-index: 3;
+    }
+
+    .picker-section { margin-bottom: 16px; }
+    .picker-section > label {
+      display: block; font-size: 12px; color: var(--muted);
+      margin-bottom: 10px;
+    }
+
+    .color-options {
+      display: flex; gap: 10px; overflow-x: auto;
+      flex-wrap: nowrap; padding-bottom: 4px; scrollbar-width: none;
+    }
+    .color-options::-webkit-scrollbar { display: none; }
+    .color-opt {
+      position: relative; display: flex; flex-direction: column;
+      align-items: center; gap: 6px; cursor: pointer;
+      border: 2px solid transparent; border-radius: 10px;
+      padding: 8px 6px; flex: 0 0 auto; width: 86px;
+    }
+    .color-opt.active { border-color: #2b3136; }
+    .color-opt.disabled { opacity: 0.38; cursor: not-allowed; pointer-events: none; filter: grayscale(0.25); }
+    .color-opt img {
+      width: 56px; height: 56px; border-radius: 8px;
+      object-fit: cover; background: #eef1f3;
+    }
+    .color-opt span { font-size: 10px; text-align: center; line-height: 1.3; width: 100%; }
+    .color-badge {
+      position: absolute; top: 2px; right: 2px;
+      width: 18px; height: 18px; border-radius: 50%;
+      background: var(--primary); color: #fff;
+      font-size: 10px; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    .size-options { display: flex; flex-wrap: wrap; gap: 10px; }
+    .size-opt {
+      min-width: 72px; height: 38px; padding: 0 14px;
+      border: 1px solid #dfe6ea; border-radius: 8px;
+      background: #fff; font-size: 13px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .size-opt.active { border-color: #2b3136; border-width: 2px; font-weight: 600; }
+    .style-opt { min-width: auto; max-width: 100%; font-size: 12px; padding: 0 10px; }
+    .style-opt.active { border-color: #2b3136; border-width: 2px; font-weight: 600; }
+    .size-opt.disabled, .style-opt.disabled {
+      opacity: 0.38; cursor: not-allowed; pointer-events: none;
+      color: #b0b8bd; background: #f5f7f8;
+    }
+    .dim-dash {
+      min-width: 72px; height: 38px; padding: 0 14px;
+      border: 1px dashed #dfe6ea; border-radius: 8px;
+      background: #f8f9fa; font-size: 13px; color: #b0b8bd;
+      display: inline-flex; align-items: center; justify-content: center;
+    }
+    .picker-hint {
+      font-size: 12px; color: var(--muted);
+      padding: 0 4px 10px; line-height: 1.4;
+    }
+
+    .sku-row {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 12px; border-radius: 12px; margin-bottom: 10px;
+      border: 1px solid var(--line); background: #fff;
+    }
+    .sku-row.selected {
+      background: rgba(44, 217, 198, 0.14);
+      border-color: rgba(44, 217, 198, 0.35);
+    }
+    .sku-info { flex: 1; min-width: 0; }
+    .sku-name { font-size: 14px; font-weight: 500; display: flex; align-items: center; gap: 6px; }
+    .sku-stock { font-size: 12px; color: var(--muted); margin-top: 4px; }
+    .tag-disco {
+      display: inline-flex; align-items: center;
+      height: 18px; padding: 0 6px; border-radius: 4px;
+      background: #fde8ea; color: var(--disco);
+      font-size: 10px; font-weight: 600;
+    }
+    .sold-out { font-size: 13px; color: var(--muted); padding: 0 8px; }
+
+    .stepper {
+      display: grid; grid-template-columns: 32px 36px 32px;
+      border: 1px solid #dfe6ea; border-radius: 8px; overflow: hidden;
+      background: #fff;
+    }
+    .stepper button {
+      border: none; background: #fff; font-size: 16px;
+      cursor: pointer; color: #56646d; height: 32px;
+    }
+    .stepper button:disabled { color: #ccc; cursor: not-allowed; }
+    .stepper input {
+      border: none; border-left: 1px solid #edf1f4;
+      border-right: 1px solid #edf1f4;
+      text-align: center; font-size: 14px; width: 100%;
+      outline: none; height: 32px;
+    }
+
+    .sheet-clear {
+      position: absolute; left: 16px; top: 50%; transform: translateY(-50%);
+      border: none; background: transparent; color: var(--primary);
+      font-size: 14px; cursor: pointer;
+    }
+
+    .selected-item {
+      display: flex; gap: 10px; padding: 12px 0;
+      border-bottom: 1px solid var(--line); align-items: center;
+    }
+    .selected-item img {
+      width: 56px; height: 56px; border-radius: 8px;
+      object-fit: cover; background: #eef1f3; flex-shrink: 0;
+    }
+    .selected-info { flex: 1; min-width: 0; }
+    .selected-desc { font-size: 12px; line-height: 1.4; margin-bottom: 4px; }
+    .selected-price { font-size: 13px; font-weight: 600; }
+    .selected-stock { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+    .toast {
+      position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+      background: rgba(20, 30, 36, 0.82); color: #fff;
+      padding: 12px 24px; border-radius: 10px; font-size: 14px;
+      z-index: 200; pointer-events: none; opacity: 0;
+      transition: opacity 0.25s;
+    }
+    .toast.show { opacity: 1; }
   </style>
 </head>
 <body>
@@ -360,14 +554,86 @@
   <div class="phone" id="app"><p style="padding:24px;text-align:center;color:#78848d">Loading...</p></div>
 
   <div class="overlay" id="overlayParam">
-    <div class="sheet" onclick="event.stopPropagation()">
+    <div class="sheet sheet-param" onclick="event.stopPropagation()">
       <div class="sheet-header">
         <h3>Parameter</h3>
         <button class="sheet-close" data-close="param">×</button>
       </div>
       <div class="sheet-body" id="paramBody"></div>
+      <div class="sheet-footer">
+        <div class="footer-actions">
+          <button class="btn-wishlist" data-open-picker>+ add to wishlist</button>
+        </div>
+      </div>
     </div>
   </div>
+
+  <div class="overlay" id="overlayPicker">
+    <div class="sheet sheet-picker" onclick="event.stopPropagation()">
+      <div class="sheet-header">
+        <h3>Parameter</h3>
+        <button class="sheet-close" data-close="picker">×</button>
+      </div>
+      <div class="picker-preview">
+        <img id="pickerThumb" src="" alt="" />
+        <div class="picker-preview-info">
+          <h4 id="pickerTitle"></h4>
+          <div class="picker-price" id="pickerPrice"></div>
+          <div class="picker-moq" id="pickerMoq"></div>
+        </div>
+      </div>
+      <div class="sale-tabs" id="saleTabs">
+        <button class="sale-tab active" data-sale="stock">Stock</button>
+        <button class="sale-tab" data-sale="custom">Custom</button>
+      </div>
+      <div class="sheet-body" id="pickerBody"></div>
+      <div class="sheet-footer">
+        <div class="footer-summary">
+          <label class="footer-check">
+            <input type="checkbox" id="checkAll" />
+            <span>All</span>
+          </label>
+          <div class="footer-total">Total: <strong id="footerTotal">$0.00</strong></div>
+          <div class="footer-selected" id="openSelected">
+            Selected: <strong id="footerSelected">0 Items, 0 Pcs</strong>
+            <span>▾</span>
+          </div>
+        </div>
+        <div class="footer-actions">
+          <button class="btn-wishlist" id="btnAddWishlist">+ add to wishlist</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="overlay" id="overlaySelected">
+    <div class="sheet sheet-picker" onclick="event.stopPropagation()">
+      <div class="sheet-header">
+        <button class="sheet-clear" id="btnClear">Clear</button>
+        <h3 id="selectedTitle">Selected 0 Pcs</h3>
+        <button class="sheet-close" data-close="selected">×</button>
+      </div>
+      <div class="sheet-body" id="selectedBody"></div>
+      <div class="sheet-footer">
+        <div class="footer-summary">
+          <label class="footer-check">
+            <input type="checkbox" id="checkAll2" />
+            <span>All</span>
+          </label>
+          <div class="footer-total">Total: <strong id="footerTotal2">$0.00</strong></div>
+          <div class="footer-selected" id="closeSelected">
+            Selected: <strong id="footerSelected2">0 Items, 0 Pcs</strong>
+            <span>▴</span>
+          </div>
+        </div>
+        <div class="footer-actions">
+          <button class="btn-wishlist" id="btnAddWishlist2">+ add to wishlist</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
 
   <script>
   (() => {
@@ -388,6 +654,7 @@
       tag: 'Bestsellers',
       price: 78.56,
       moq: 5,
+      customMoq: 50,
       stock: 1000,
       installTime: '45 minutes',
       deliveryDate: '7 days',
@@ -416,6 +683,28 @@
         ['Goods Type', '--'],
         ['Elec. Type', '--'],
         ['Output Volt.', '--'],
+      ],
+      colors: [
+        { id: 'c1', label: 'Wood Color + Light Grey', img: IMAGES[0], badge: 5 },
+        { id: 'c2', label: 'Vintage + Black', img: IMAGES[1] },
+        { id: 'c3', label: 'Vintage + Green', img: IMAGES[3] },
+        { id: 'c4', label: 'Other', img: IMAGES[5] },
+      ],
+      sizes: ['2.37m', '2.72m', '3.02m'],
+      skus: [
+        { id: 's1', code: 'LS-OAK-001', color: 'Vintage + Black', colorImg: IMAGES[1], size: '2.72m', material: 'Oak', stock: 1000, moq: 5, price: 78.56, disco: false, soldOut: false },
+        { id: 's2', code: 'LS-BW-002', color: 'Vintage + Black', colorImg: IMAGES[1], size: '2.72m', material: 'Black Walnut', stock: 10, moq: 5, price: 78.56, disco: true, soldOut: false },
+        { id: 's3', code: 'LS-WD-003', color: 'Vintage + Black', colorImg: IMAGES[1], size: '2.72m', material: 'Wooden', stock: 0, moq: 5, price: 78.56, disco: false, soldOut: true },
+        { id: 's4', code: 'LS-C001-BK-180', color: 'Wood Color + Light Grey', colorImg: IMAGES[0], size: '2.72m', material: 'Fabric A', stock: 1000, moq: 5, price: 78.56, disco: false, soldOut: false },
+        { id: 's5', code: 'LS-C001-BK-181', color: 'Wood Color + Light Grey', colorImg: IMAGES[0], size: '2.72m', material: 'Fabric A', stock: 10, moq: 5, price: 78.56, disco: true, soldOut: false },
+        { id: 's6', code: 'LS-C001-BK-182', color: 'Wood Color + Light Grey', colorImg: IMAGES[0], size: '2.72m', material: 'Fabric A', stock: 0, moq: 5, price: 78.56, disco: false, soldOut: true },
+        { id: 's7', code: 'LS-C001-BK-185', color: 'Wood Color + Light Grey', colorImg: IMAGES[0], size: '3.02m', material: 'Fabric B', stock: 1000, moq: 5, price: 78.56, disco: false, soldOut: false },
+      ],
+      otherSkus: [
+        { id: 'o1', code: 'CUSTOM-001', color: '', size: '', material: '', stock: 1000, moq: 5, price: 78.56, disco: false, soldOut: false },
+        { id: 'o2', code: 'CUSTOM-002', color: '', size: '', material: '', stock: 10, moq: 5, price: 78.56, disco: true, soldOut: false },
+        { id: 'o3', code: 'CUSTOM-003', color: '', size: '', material: '', stock: 0, moq: 5, price: 78.56, disco: false, soldOut: true },
+        { id: 'o4', code: 'CUSTOM-004', color: '', size: '', material: '', stock: 1000, moq: 5, price: 78.56, disco: false, soldOut: false },
       ],
       description: {
         overview: 'Plywood, Foam, PU Cotton, 12-Proof Cat Fabric',
@@ -449,8 +738,193 @@
       recTab: 'series',
       recFavs: {},
       favorited: false,
+      saleType: 'stock',
+      pickerSel: { color: null, size: null, material: null, skuId: null },
+      resolvedSku: null,
+      qtyMap: { s1: 5, s2: 0, s3: 0, s4: 7, s5: 0, s6: 0, s7: 0, o1: 5, o2: 0, o3: 0, o4: 7 },
       overlay: null,
     };
+
+    const DIM_KEYS = ['color', 'size', 'material'];
+    const DIM_LABELS = { color: 'Color', size: 'Size', material: 'Material' };
+
+    function isDimValue(v) {
+      return v != null && String(v).trim() !== '' && v !== '-';
+    }
+
+    function getPickerSkus() {
+      return state.saleType === 'stock' ? PRODUCT.skus : PRODUCT.otherSkus;
+    }
+
+    function analyzeDimConfig(skus) {
+      const cfg = {};
+      DIM_KEYS.forEach((d) => { cfg[d] = skus.some((s) => isDimValue(s[d])); });
+      cfg.allEmpty = !cfg.color && !cfg.size && !cfg.material;
+      return cfg;
+    }
+
+    function filterBySel(skus, sel, skipDim) {
+      return skus.filter((s) => {
+        for (const d of DIM_KEYS) {
+          if (d === skipDim) continue;
+          if (sel[d] && isDimValue(s[d]) && s[d] !== sel[d]) return false;
+        }
+        if (sel.skuId) return s.id === sel.skuId;
+        return true;
+      });
+    }
+
+    function getCandidates(sel) {
+      return filterBySel(getPickerSkus(), sel || state.pickerSel);
+    }
+
+    function allConfiguredDimsSelected(sel, cfg) {
+      return DIM_KEYS.every((d) => !cfg[d] || sel[d]);
+    }
+
+    function needsStyleSection(candidates, cfg, sel) {
+      if (cfg.allEmpty) return true;
+      if (!allConfiguredDimsSelected(sel, cfg)) return false;
+      return candidates.length > 1;
+    }
+
+    function isDimOptionAvailable(dim, value, sel) {
+      const test = { ...sel, [dim]: value, skuId: null };
+      return filterBySel(getPickerSkus(), test).length > 0;
+    }
+
+    function getUniqueDimValues(skus, dim) {
+      return [...new Set(skus.filter((s) => isDimValue(s[dim])).map((s) => s[dim]))];
+    }
+
+    function getColorMeta(skus) {
+      const map = new Map();
+      skus.forEach((s) => {
+        if (!isDimValue(s.color) || map.has(s.color)) return;
+        map.set(s.color, { value: s.color, img: s.colorImg || PRODUCT.gallery[0] });
+      });
+      return [...map.values()];
+    }
+
+    function buildSkuDesc(s, cfg) {
+      const parts = [];
+      if (cfg.color) parts.push(isDimValue(s.color) ? s.color : '-');
+      if (cfg.size) parts.push(isDimValue(s.size) ? s.size : '-');
+      if (cfg.material) parts.push(isDimValue(s.material) ? s.material : '-');
+      if (cfg.allEmpty) return s.code;
+      if (parts.length && !parts.every((p) => p === '-')) return `${parts.join('; ')}; ${s.code}`;
+      return s.code;
+    }
+
+    function resetPickerSel() {
+      state.pickerSel = { color: null, size: null, material: null, skuId: null };
+      state.resolvedSku = null;
+    }
+
+    function autoResolvePicker() {
+      const skus = getPickerSkus();
+      const cfg = analyzeDimConfig(skus);
+      let sel = { ...state.pickerSel };
+
+      if (cfg.allEmpty) {
+        if (sel.skuId && skus.some((s) => s.id === sel.skuId)) {
+          state.resolvedSku = skus.find((s) => s.id === sel.skuId);
+        } else if (skus.length === 1) {
+          sel.skuId = skus[0].id;
+          state.pickerSel = sel;
+          state.resolvedSku = skus[0];
+        } else {
+          state.pickerSel = sel;
+          state.resolvedSku = null;
+        }
+        return;
+      }
+
+      let changed = true;
+      while (changed) {
+        changed = false;
+        const candidates = filterBySel(skus, sel);
+        for (const d of DIM_KEYS) {
+          if (!cfg[d] || sel[d]) continue;
+          const vals = getUniqueDimValues(candidates, d);
+          if (vals.length === 1) {
+            sel[d] = vals[0];
+            changed = true;
+          }
+        }
+      }
+
+      state.pickerSel = { ...sel, skuId: sel.skuId };
+      let candidates = filterBySel(skus, state.pickerSel);
+
+      if (!allConfiguredDimsSelected(state.pickerSel, cfg)) {
+        state.pickerSel.skuId = null;
+        state.resolvedSku = null;
+        return;
+      }
+
+      if (candidates.length === 1) {
+        state.pickerSel.skuId = candidates[0].id;
+        state.resolvedSku = candidates[0];
+        return;
+      }
+
+      if (needsStyleSection(candidates, cfg, state.pickerSel)) {
+        if (state.pickerSel.skuId && candidates.some((s) => s.id === state.pickerSel.skuId)) {
+          state.resolvedSku = candidates.find((s) => s.id === state.pickerSel.skuId);
+        } else {
+          state.pickerSel.skuId = null;
+          state.resolvedSku = null;
+        }
+        return;
+      }
+
+      state.pickerSel.skuId = null;
+      state.resolvedSku = null;
+    }
+
+    function onPickerDimSelect(dim, value) {
+      state.pickerSel[dim] = value;
+      state.pickerSel.skuId = null;
+      autoResolvePicker();
+      renderPicker();
+    }
+
+    function onPickerStyleSelect(skuId) {
+      state.pickerSel.skuId = skuId;
+      autoResolvePicker();
+      renderPicker();
+    }
+
+    function fmtTotal(v) {
+      return '$' + v.toFixed(2);
+    }
+
+    function getSelectedItems() {
+      const skus = [...PRODUCT.skus, ...PRODUCT.otherSkus];
+      const stockCfg = analyzeDimConfig(PRODUCT.skus);
+      const customCfg = analyzeDimConfig(PRODUCT.otherSkus);
+      const customIds = new Set(PRODUCT.otherSkus.map((s) => s.id));
+      return skus.filter((s) => (state.qtyMap[s.id] || 0) > 0).map((s) => ({
+        ...s,
+        qty: state.qtyMap[s.id],
+        desc: buildSkuDesc(s, customIds.has(s.id) ? customCfg : stockCfg),
+      }));
+    }
+
+    function getSummary() {
+      const items = getSelectedItems();
+      const pcs = items.reduce((sum, i) => sum + i.qty, 0);
+      const total = items.reduce((sum, i) => sum + i.qty * i.price, 0);
+      return { itemCount: items.length, pcs, total };
+    }
+
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 1800);
+    }
 
     function fmtPrice(v) {
       const [int, dec] = v.toFixed(2).split('.');
@@ -463,9 +937,20 @@
     }
 
     function openOverlay(name) {
+      const prev = state.overlay;
       state.overlay = name;
       document.getElementById('overlayParam').classList.toggle('open', name === 'param');
+      document.getElementById('overlayPicker').classList.toggle('open', name === 'picker');
+      document.getElementById('overlaySelected').classList.toggle('open', name === 'selected');
       if (name === 'param') renderParam();
+      if (name === 'picker') {
+        if (!prev) {
+          resetPickerSel();
+          autoResolvePicker();
+        }
+        renderPicker();
+      }
+      if (name === 'selected') renderSelected();
     }
 
     function closeOverlay() {
@@ -565,6 +1050,7 @@
             <span class="ico">♡</span>
             <span>Fav</span>
           </button>
+          <button class="btn-wishlist" id="btnOpenPicker">+ add to wishlist</button>
         </footer>
       `;
       bindMain();
@@ -648,6 +1134,92 @@
       return '';
     }
 
+    function renderColorSection(skus, cfg, sel) {
+      if (!cfg.color) {
+        return `<div class="picker-section"><label>Color</label><div class="size-options"><span class="dim-dash">-</span></div></div>`;
+      }
+      const colors = getColorMeta(skus);
+      return `
+        <div class="picker-section">
+          <label>Color</label>
+          <div class="color-options">
+            ${colors.map((c) => {
+              const available = isDimOptionAvailable('color', c.value, sel);
+              const active = sel.color === c.value;
+              return `
+                <div class="color-opt ${active ? 'active' : ''} ${available ? '' : 'disabled'}"
+                  data-pick-dim="color" data-value="${c.value.replace(/"/g, '&quot;')}">
+                  <img src="${c.img}" alt="" />
+                  <span>${c.value}</span>
+                </div>
+              `;
+            }).join('')}
+          </div>
+        </div>
+      `;
+    }
+
+    function renderChipDimSection(dim, skus, cfg, sel) {
+      const label = DIM_LABELS[dim];
+      if (!cfg[dim]) {
+        return `<div class="picker-section"><label>${label}</label><div class="size-options"><span class="dim-dash">-</span></div></div>`;
+      }
+      const values = getUniqueDimValues(skus, dim);
+      return `
+        <div class="picker-section">
+          <label>${label}</label>
+          <div class="size-options">
+            ${values.map((val) => {
+              const available = isDimOptionAvailable(dim, val, sel);
+              const active = sel[dim] === val;
+              return `
+                <button type="button"
+                  class="size-opt ${active ? 'active' : ''} ${available ? '' : 'disabled'}"
+                  data-pick-dim="${dim}" data-value="${String(val).replace(/"/g, '&quot;')}"
+                  ${available ? '' : 'disabled'}>${val}</button>
+              `;
+            }).join('')}
+          </div>
+        </div>
+      `;
+    }
+
+    function renderStyleSection(skus, cfg, sel, candidates) {
+      const list = cfg.allEmpty ? skus : candidates;
+      return `
+        <div class="picker-section">
+          <label>Style</label>
+          ${cfg.allEmpty
+            ? '<p class="picker-hint">No color / size / material configured. Please select a SKU code.</p>'
+            : '<p class="picker-hint">Multiple SKU codes match. Please select a style.</p>'}
+          <div class="size-options">
+            ${list.map((s) => {
+              const active = sel.skuId === s.id;
+              return `
+                <button type="button"
+                  class="style-opt size-opt ${active ? 'active' : ''} ${s.soldOut ? 'disabled' : ''}"
+                  data-pick-style="${s.id}" ${s.soldOut ? 'disabled' : ''}>
+                  ${s.code}${s.disco ? ' · Disco' : ''}${s.soldOut ? ' · Sold Out' : ''}
+                </button>
+              `;
+            }).join('')}
+          </div>
+        </div>
+      `;
+    }
+
+    function renderPickerHint(cfg, sel, candidates) {
+      if (cfg.allEmpty) return '';
+      const pending = DIM_KEYS.filter((d) => cfg[d] && !sel[d]).map((d) => DIM_LABELS[d]);
+      if (pending.length) {
+        return `<p class="picker-hint">Please select: ${pending.join(', ')}</p>`;
+      }
+      if (candidates.length > 1 && !needsStyleSection(candidates, cfg, sel)) {
+        return `<p class="picker-hint">${candidates.length} matching SKUs — keep selecting specs.</p>`;
+      }
+      return '';
+    }
+
     function renderParam() {
       document.getElementById('paramBody').innerHTML = PRODUCT.attributes.map(([label, value]) => `
         <div class="param-row">
@@ -655,6 +1227,170 @@
           <span class="value">${value}</span>
         </div>
       `).join('');
+    }
+
+    function renderPicker() {
+      autoResolvePicker();
+
+      const skus = getPickerSkus();
+      const cfg = analyzeDimConfig(skus);
+      const sel = state.pickerSel;
+      const candidates = getCandidates(sel);
+      const showStyle = needsStyleSection(candidates, cfg, sel);
+      const moq = state.saleType === 'custom' ? PRODUCT.customMoq : PRODUCT.moq;
+      const previewSku = state.resolvedSku || candidates[0] || skus[0];
+
+      document.getElementById('pickerThumb').src = previewSku?.colorImg || PRODUCT.gallery[0];
+      document.getElementById('pickerTitle').textContent = PRODUCT.title;
+      document.getElementById('pickerPrice').innerHTML = fmtPrice(previewSku?.price ?? PRODUCT.price);
+      document.getElementById('pickerMoq').textContent = `MOQ: ${moq} pcs`;
+
+      document.querySelectorAll('.sale-tab').forEach((btn) => {
+        btn.classList.toggle('active', btn.dataset.sale === state.saleType);
+      });
+
+      let html = '';
+      if (!cfg.allEmpty) {
+        html += renderColorSection(skus, cfg, sel);
+        html += renderChipDimSection('size', skus, cfg, sel);
+        html += renderChipDimSection('material', skus, cfg, sel);
+      }
+      if (showStyle) {
+        html += renderStyleSection(skus, cfg, sel, candidates);
+      }
+      html += renderPickerHint(cfg, sel, candidates);
+      if (state.resolvedSku) {
+        html += `
+          <div class="picker-section">
+            <label>Qty</label>
+            ${renderSkuRow(state.resolvedSku)}
+          </div>
+        `;
+      }
+
+      document.getElementById('pickerBody').innerHTML = html;
+      updateFooter();
+      bindPicker();
+    }
+
+    function renderSkuRow(s) {
+      const qty = state.qtyMap[s.id] || 0;
+      const selected = qty > 0;
+      if (s.soldOut) {
+        return `
+          <div class="sku-row">
+            <div class="sku-info">
+              <div class="sku-name">${s.code}</div>
+              <div class="sku-stock">Stock: 0 pcs</div>
+            </div>
+            <span class="sold-out">Sold Out</span>
+          </div>
+        `;
+      }
+      return `
+        <div class="sku-row ${selected ? 'selected' : ''}" data-sku="${s.id}">
+          <div class="sku-info">
+            <div class="sku-name">
+              ${s.code}
+              ${s.disco ? '<span class="tag-disco">Disco</span>' : ''}
+            </div>
+            <div class="sku-stock">Stock: ${s.stock.toLocaleString()} pcs</div>
+          </div>
+          <div class="stepper">
+            <button data-step="${s.id}" data-delta="-1" ${qty <= 0 ? 'disabled' : ''}>−</button>
+            <input value="${qty}" data-qty-input="${s.id}" readonly />
+            <button data-step="${s.id}" data-delta="1">+</button>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderSelected() {
+      const items = getSelectedItems();
+      const { pcs, total, itemCount } = getSummary();
+      document.getElementById('selectedTitle').textContent = `Selected ${pcs} Pcs`;
+      document.getElementById('selectedBody').innerHTML = items.length ? items.map(item => `
+        <div class="selected-item">
+          <img src="${PRODUCT.gallery[0]}" alt="" />
+          <div class="selected-info">
+            <div class="selected-desc">${item.desc}</div>
+            <div class="selected-price">${fmtPrice(item.price)}</div>
+            <div class="selected-stock">Stock: ${item.stock.toLocaleString()} pcs</div>
+          </div>
+          <div class="stepper">
+            <button data-step="${item.id}" data-delta="-1" ${item.qty <= 0 ? 'disabled' : ''}>−</button>
+            <input value="${item.qty}" readonly />
+            <button data-step="${item.id}" data-delta="1">+</button>
+          </div>
+        </div>
+      `).join('') : '<p style="padding:20px;text-align:center;color:#8a959c">No items selected</p>';
+
+      document.getElementById('footerTotal2').textContent = fmtTotal(total);
+      document.getElementById('footerSelected2').textContent = `${itemCount} Items, ${pcs} Pcs`;
+      document.getElementById('checkAll2').checked = itemCount > 0;
+
+      document.querySelectorAll('#selectedBody [data-step]').forEach(btn => {
+        btn.onclick = () => changeQty(btn.dataset.step, Number(btn.dataset.delta));
+      });
+    }
+
+    function updateFooter() {
+      const { pcs, total, itemCount } = getSummary();
+      document.getElementById('footerTotal').textContent = fmtTotal(total);
+      document.getElementById('footerSelected').innerHTML = `${itemCount} Items, ${pcs} Pcs`;
+      document.getElementById('checkAll').checked = itemCount > 0;
+      if (document.getElementById('footerTotal2')) {
+        document.getElementById('footerTotal2').textContent = fmtTotal(total);
+        document.getElementById('footerSelected2').textContent = `${itemCount} Items, ${pcs} Pcs`;
+      }
+    }
+
+    function changeQty(skuId, delta) {
+      const allSkus = [...PRODUCT.skus, ...PRODUCT.otherSkus];
+      const sku = allSkus.find(s => s.id === skuId);
+      if (!sku || sku.soldOut) return;
+      const moq = state.saleType === 'custom' ? PRODUCT.customMoq : (sku.moq || PRODUCT.moq);
+      let next = (state.qtyMap[skuId] || 0) + delta;
+      if (next < 0) next = 0;
+      if (next > 0 && next < moq) next = delta > 0 ? moq : 0;
+      if (next > sku.stock) {
+        showToast(`Max stock: ${sku.stock} pcs`);
+        next = sku.stock;
+      }
+      state.qtyMap[skuId] = next;
+      if (state.overlay === 'picker') renderPicker();
+      else if (state.overlay === 'selected') { renderSelected(); updateFooter(); }
+      else updateFooter();
+    }
+
+    function submitWishlist() {
+      const { pcs } = getSummary();
+      if (pcs <= 0) {
+        showToast('Please select quantity');
+        return;
+      }
+      showToast(`Added ${pcs} pcs to wishlist`);
+      closeOverlay();
+    }
+
+    function bindPicker() {
+      document.querySelectorAll('#pickerBody [data-pick-dim]').forEach((el) => {
+        el.onclick = () => onPickerDimSelect(el.dataset.pickDim, el.dataset.value);
+      });
+      document.querySelectorAll('#pickerBody [data-pick-style]').forEach((btn) => {
+        btn.onclick = () => onPickerStyleSelect(btn.dataset.pickStyle);
+      });
+      document.querySelectorAll('#pickerBody [data-step]').forEach((btn) => {
+        btn.onclick = () => changeQty(btn.dataset.step, Number(btn.dataset.delta));
+      });
+      document.querySelectorAll('#saleTabs .sale-tab').forEach((btn) => {
+        btn.onclick = () => {
+          state.saleType = btn.dataset.sale;
+          resetPickerSel();
+          autoResolvePicker();
+          renderPicker();
+        };
+      });
     }
 
     function bindMain() {
@@ -696,18 +1432,38 @@
         state.favorited = !state.favorited;
         renderMain();
       };
+      document.getElementById('btnOpenPicker').onclick = () => openOverlay('picker');
       const paramBtn = document.querySelector('[data-open-param]');
       if (paramBtn) paramBtn.onclick = () => openOverlay('param');
     }
 
+    function bindOverlays() {
+      document.querySelectorAll('[data-close]').forEach(btn => {
+        btn.onclick = () => closeOverlay();
+      });
+      document.querySelectorAll('.overlay').forEach(overlay => {
+        overlay.onclick = (e) => { if (e.target === overlay) closeOverlay(); };
+      });
+      document.querySelectorAll('[data-open-picker]').forEach(btn => {
+        btn.onclick = () => {
+          closeOverlay();
+          setTimeout(() => openOverlay('picker'), 200);
+        };
+      });
+      document.getElementById('openSelected').onclick = () => openOverlay('selected');
+      document.getElementById('closeSelected').onclick = () => openOverlay('picker');
+      document.getElementById('btnAddWishlist').onclick = submitWishlist;
+      document.getElementById('btnAddWishlist2').onclick = submitWishlist;
+      document.getElementById('btnClear').onclick = () => {
+        Object.keys(state.qtyMap).forEach(k => { state.qtyMap[k] = 0; });
+        renderSelected();
+        updateFooter();
+      };
+    }
+
     function init() {
       try {
-        document.querySelectorAll('[data-close]').forEach(btn => {
-          btn.onclick = () => closeOverlay();
-        });
-        document.querySelectorAll('.overlay').forEach(overlay => {
-          overlay.onclick = (e) => { if (e.target === overlay) closeOverlay(); };
-        });
+        bindOverlays();
         renderMain();
       } catch (err) {
         console.error(err);
